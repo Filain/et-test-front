@@ -10,79 +10,75 @@ type IProps = object
 
 const Events: FC<IProps> = () => {
     const [sortBy, setSortBy] = useSearchParams('');
-    const [reverseSort, setReverseSort] = useState(false);
-    const [event, setEvent] = useState<IEvent[]>([])
-    const [totalPage, setTotalPage] = useState<number>()
-    const [query, setQuery] = useSearchParams({page: '1'});
-    const [prevNext, setPrevNext] = useState({prev: null, next: null});
-    const page = query.get('page') || null;
-
-    const prev = () => {
-        setQuery(prev => {
-            prev.set('page', `${+prev.get('page') - 1}`)
-            return prev
-        })
-    }
-    const next = () => {
-        setQuery(prev => {
-            prev.set('page', `${+prev.get('page') + 1}`)
-            return prev
-        })
-    }
+    const [event, setEvent] = useState<IEvent[]>([]);
+    const [totalPage, setTotalPage] = useState<number>();
+    const [fetching, setFetching] = useState<boolean>(true);
+    const [page, setPage] = useState(1);
 
     const sort = (by: string) => {
-        const newSortBy = reverseSort ? `-${by}` : by;
+        const currentSortBy = sortBy.get('sortBy') || '';
+        let newSortBy;
+        if (currentSortBy === `-${by}`) {
+            newSortBy = by;
+        } else if (currentSortBy === by) {
+            newSortBy = `-${by}`;
+        } else {
+            newSortBy = by;
+        }
         sortBy.set('sortBy', newSortBy);
         setSortBy(sortBy);
+        setPage(1); // Скидаємо сторінку на початкову
+        setEvent([]); // Очищаємо масив подій
+        setFetching(true); // Встановлюємо стан fetching, щоб оновити події
     };
 
-    const reverset = () => {
-        const currentSortBy = sortBy.get('sortBy') || '';
-        const newSortBy = currentSortBy.startsWith('-') ? currentSortBy.slice(1) : `-${currentSortBy}`;
-        sortBy.set('sortBy', newSortBy)
-        setSortBy(sortBy)
-        setReverseSort(!reverseSort);
-    }
-
-
-
-
+    useEffect(() => {
+        eventService.getAll(page.toString(), sortBy.get('sortBy')).then(({ data }) => {
+            if (page === 1) {
+                setEvent(data.data); // Якщо це перша сторінка, заміняємо старі події
+            } else {
+                setEvent((prevEvents) => [...prevEvents, ...data.data]); // Додаємо нові події до існуючих
+            }
+            setTotalPage(data.meta.total);
+        }).finally(() => setFetching(false));
+    }, [page, sortBy, fetching]);
 
     useEffect(() => {
-        eventService.getAll(page, sortBy.get('sortBy')).then(({data}) => {
-            setEvent(data.data)
-            setTotalPage(data.meta.total)
-            setPrevNext({prev: data.meta.page - 1, next: data.meta.page + 1})
-        })
-    }, [page, sortBy]);
+        document.addEventListener('scroll', scrollHandler);
+        return () => {
+            document.removeEventListener('scroll', scrollHandler);
+        };
+    }, [page]);
+
+    // Збільшуємо сторінку, тільки коли фетч завершено
+    useEffect(() => {
+        if (!fetching) {
+            setPage((prevPage) => prevPage + 1); // Збільшуємо сторінку після завершення фетчингу
+        }
+    }, [fetching]);
+
+    const scrollHandler = (e: Event) => {
+        const target = e.target as Document;
+        if (target.documentElement.scrollHeight - (target.documentElement.scrollTop + window.innerHeight) < 100 && page < totalPage) {
+            setFetching(true);
+        }
+        console.log('scrollHandler')
+    };
 
     return (
         <>
             <div className={css.form}>
-                <button onClick={() => sort('title')}>Sort by title 2</button>
-
-
+                <button onClick={() => sort('id')}>Sort by id</button>
                 <button onClick={() => sort('title')}>Sort by title</button>
                 <button onClick={() => sort('date')}>Sort by date</button>
                 <button onClick={() => sort('organizer')}>Sort by organizer</button>
-                <input
-                    type="checkbox"
-                    id="reverseSort"
-                    checked={reverseSort}
-                    onChange={() => reverset()}
-                />
-                <label htmlFor="reverseSort">Reverse Sort</label>
             </div>
 
             <div className={css.events_wrap}>
-            {event.map((item, index) => <Event key={index} event={item}/>)}
-            </div>
-            <div className={css.form}>
-                <button disabled={!prevNext.prev} onClick={prev}>prev</button>
-                <button disabled={prevNext.next > totalPage} onClick={next}>next</button>
+            {event.map((item, index) => <Event key={index} event={item} />)}
             </div>
         </>
     );
 };
 
-export {Events};
+export { Events };
