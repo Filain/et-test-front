@@ -1,4 +1,4 @@
-import {FC, useEffect, useState} from "react";
+import {FC, useCallback, useEffect, useState} from "react";
 
 import {useSearchParams} from "react-router-dom";
 import {Event} from "../Event/Event";
@@ -32,13 +32,12 @@ const Events: FC<IProps> = () => {
         setFetching(true); // Встановлюємо стан fetching, щоб оновити події
     };
 
-    const scrollHandler = (e: Event) => {
+    const scrollHandler = useCallback((e: Event) => {
         const target = e.target as Document;
         if (target.documentElement.scrollHeight - (target.documentElement.scrollTop + window.innerHeight) < 100 && page < totalPage) {
             setFetching(true);
         }
-        console.log('scrollHandler')
-    };
+    }, [page, totalPage]);
 
     useEffect(() => {
         eventService.getAll(page.toString(), sortBy.get('sortBy')).then(({ data }) => {
@@ -51,14 +50,14 @@ const Events: FC<IProps> = () => {
         }).finally(() => setFetching(false));
     }, [page, sortBy, fetching]);
 
+    // Обробка скролу
     useEffect(() => {
             document.addEventListener('scroll', scrollHandler);
             return () => {
                 document.removeEventListener('scroll', scrollHandler);
             };
         },
-        // eslint-disable-next-line
-        [page]);
+        [scrollHandler]);
 
     // Збільшуємо сторінку, тільки коли фетч завершено
     useEffect(() => {
@@ -66,8 +65,6 @@ const Events: FC<IProps> = () => {
             setPage((prevPage) => prevPage + 1); // Збільшуємо сторінку після завершення фетчингу
         }
     }, [fetching]);
-
-
 
     return (
         <>
