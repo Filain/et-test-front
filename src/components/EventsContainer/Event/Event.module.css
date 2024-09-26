@@ -1,0 +1,30 @@
+.event_wrap{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 20%;
+}
+
+.linkbutton {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.linkbutton:hover {
+    background-color: #0056b3;
+}
+
+.buttonWrap{
+    display: flex;
+    justify-content: space-around;
+}

@@ -1,0 +1,33 @@
+.users_wrap{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+
+.form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.progresscontainer {
+    width: 100%;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.progressbar {
+    height: 20px;
+    background-color: #4CAF50;
+    border-radius: 5px;
+}
+
+#visitorcount {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
