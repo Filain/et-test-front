@@ -1,11 +1,8 @@
 import {FC} from "react";
 import {RegisterForm} from "../components/RegisterForm/RegisterForm";
 
-interface IProps {
 
-}
-
-const RegistrationPage: FC<IProps> = () => {
+const RegistrationPage: FC = () => {
     return (
         <div>
             <RegisterForm/>

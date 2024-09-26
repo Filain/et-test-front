@@ -11,7 +11,6 @@ const urls={
         base: users,
         byId: (id:string) => `${users}/${id}`,
         byDay: (id:string) => `${users}/day/${id}`
-
     }
 }
 export {

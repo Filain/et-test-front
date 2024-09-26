@@ -1,16 +1,14 @@
 import {FC, useEffect, useState} from "react";
 import {User} from "../User/User";
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
-import {IFormValues, IUser} from "../../../../../et-test-front/src/interfases/user";
 import {userService} from "../../../servises/userService";
-import css from "./Users.module.css"
 import {SubmitHandler, useForm} from "react-hook-form";
+import {IFormValues, IUser} from "../../../interfases/user.ts";
 
-interface IProps {
+import css from "./Users.module.css"
 
-}
 
-const Users: FC<IProps> = () => {
+const Users: FC = () => {
     const {id} = useParams<{ id: string }>()
     const [user, setUser] = useState<IUser[]>([])
     const [totalPage, setTotalPage] = useState<number>()
@@ -20,10 +18,9 @@ const Users: FC<IProps> = () => {
     const name = query.get('name');
     const email = query.get('email');
     const navigate = useNavigate()
-    const {register, handleSubmit} = useForm<IFormValues>()
+    const {register, handleSubmit, reset} = useForm<IFormValues>()
 
     const [byDay, setByDay] = useState<number>(0)
-
 
 
     const prev = () => {
@@ -48,29 +45,31 @@ const Users: FC<IProps> = () => {
         });
     };
     useEffect(() => {
-        userService.byDay(id).then(({   data }) => {
+        userService.byDay(id).then(({data}) => {
             setByDay(data)
         });
     }, [id]);
 
     useEffect(() => {
-        userService.getAll(page, id, name, email).then(({ data }) => {
+        userService.getAll(page, id, name, email).then(({data}) => {
             setUser(data.data);
             setTotalPage(data.meta.total);
-            setPrevNext({ prev: data.meta.page - 1, next: data.meta.page + 1 });
+            setPrevNext({prev: data.meta.page - 1, next: data.meta.page + 1});
         });
     }, [page, id, name, email]);
 
+    const resetData = () => {
+        reset()
+    }
+
     return (
         <>
-
             <div></div>
             <div className={css.progresscontainer}>
-                <div className={css.progressbar} style={{ width: (byDay * 5) + '%' }}></div>
+                <div className={css.progressbar} style={{width: (byDay * 5) + '%'}}></div>
             </div>
 
             <p id="visitor-count">Users registred by day {byDay}</p>
-
 
 
             <div>
@@ -81,11 +80,13 @@ const Users: FC<IProps> = () => {
                     <div>
                         <label> Search by Name: </label>
                         <input {...register('name')} />
-
                         <label> Search by Email: </label>
                         <input  {...register('email')} />
                         <button type="submit">Submit</button>
                     </div>
+
+                    <button onClick={resetData}>Reset</button>
+
                 </form>
 
 
@@ -100,10 +101,10 @@ const Users: FC<IProps> = () => {
                         {user.map((item, index) => <User key={index} user={item}/>)}
                     </div>
 
-                        <div className={css.form}>
-                            <button disabled={!prevNext.prev} onClick={prev}>prev</button>
-                            <button disabled={prevNext.next > totalPage} onClick={next}>next</button>
-                        </div>
+                    <div className={css.form}>
+                        <button disabled={!prevNext.prev} onClick={prev}>prev</button>
+                        <button disabled={prevNext.next > totalPage} onClick={next}>next</button>
+                    </div>
 
                 </>
             )}

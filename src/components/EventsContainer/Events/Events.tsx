@@ -2,7 +2,7 @@ import {FC, useCallback, useEffect, useState} from "react";
 
 import {useSearchParams} from "react-router-dom";
 import {Event} from "../Event/Event";
-import css from './Events.module.css'
+// import css from './Events.module.css'
 import {IEvent} from "../../../interfases/event.ts";
 import {eventService} from "../../../servises/eventService.ts";
 
@@ -67,18 +67,26 @@ const Events: FC<IProps> = () => {
     }, [fetching]);
 
     return (
-        <>
-            <div className={css.form}>
-                <button onClick={() => sort('id')}>Sort by id</button>
-                <button onClick={() => sort('title')}>Sort by title</button>
-                <button onClick={() => sort('date')}>Sort by date</button>
-                <button onClick={() => sort('organizer')}>Sort by organizer</button>
+        <div className="flex flex-col items-center justify-center">
+            <div className="bg-gray-900  w-full flex justify-center items-center bg-gray-300 p-4 ">
+                <button
+                    className=" mr-6 p-2 relative inline-flex items-center justify-center rounded-md px-4 py-2 text-white bg-[#646cff] hover:text-white hover:bg-[#7a7fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#646cff] transition-all duration-300"
+                    onClick={() => sort('id')}>Sort by id</button>
+                <button className="mr-6 p-2 bg-blue-500 text-white rounded" onClick={() => sort('title')}>Sort by title</button>
+                <button className="mr-6 p-2 bg-blue-500 text-white rounded" onClick={() => sort('date')}>Sort by date</button>
+                <button className="mr-6 p-2 bg-blue-500 text-white rounded" onClick={() => sort('organizer')}>Sort by organizer</button>
             </div>
 
-            <div className={css.events_wrap}>
-            {event.map((item, index) => <Event key={index} event={item} />)}
+            <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                {Array.isArray(event) && event.length > 0 ? (
+                    event.map((item, index) => (
+                        <Event key={index} event={item} />
+                    ))
+                ) : (
+                    <p>No events available</p> // Можна додати повідомлення, якщо немає подій
+                )}
             </div>
-        </>
+        </div>
     );
 };
 

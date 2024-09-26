@@ -1,18 +1,10 @@
-import {FC, PropsWithChildren} from "react";
+import {FC} from "react";
 import {Outlet} from "react-router-dom";
 
-
-interface IProps extends PropsWithChildren {
-
-}
-
-const MainPage: FC<IProps> = () => {
+const MainPage: FC = () => {
     return (
-        <div>
-
+        <div className="w-[100vw] flex align-top justify-center">
             <Outlet/>
-
-
         </div>
     );
 };
