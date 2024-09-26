@@ -32,6 +32,14 @@ const Events: FC<IProps> = () => {
         setFetching(true); // Встановлюємо стан fetching, щоб оновити події
     };
 
+    const scrollHandler = (e: Event) => {
+        const target = e.target as Document;
+        if (target.documentElement.scrollHeight - (target.documentElement.scrollTop + window.innerHeight) < 100 && page < totalPage) {
+            setFetching(true);
+        }
+        console.log('scrollHandler')
+    };
+
     useEffect(() => {
         eventService.getAll(page.toString(), sortBy.get('sortBy')).then(({ data }) => {
             if (page === 1) {
@@ -44,11 +52,13 @@ const Events: FC<IProps> = () => {
     }, [page, sortBy, fetching]);
 
     useEffect(() => {
-        document.addEventListener('scroll', scrollHandler);
-        return () => {
-            document.removeEventListener('scroll', scrollHandler);
-        };
-    }, [page]);
+            document.addEventListener('scroll', scrollHandler);
+            return () => {
+                document.removeEventListener('scroll', scrollHandler);
+            };
+        },
+        // eslint-disable-next-line
+        [page]);
 
     // Збільшуємо сторінку, тільки коли фетч завершено
     useEffect(() => {
@@ -57,13 +67,7 @@ const Events: FC<IProps> = () => {
         }
     }, [fetching]);
 
-    const scrollHandler = (e: Event) => {
-        const target = e.target as Document;
-        if (target.documentElement.scrollHeight - (target.documentElement.scrollTop + window.innerHeight) < 100 && page < totalPage) {
-            setFetching(true);
-        }
-        console.log('scrollHandler')
-    };
+
 
     return (
         <>
