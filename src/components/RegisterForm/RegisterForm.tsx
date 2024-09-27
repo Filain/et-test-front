@@ -3,10 +3,11 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {useNavigate, useParams} from "react-router-dom";
 import {userService} from "../../servises/userService";
 import {EWhereHere, IFormValues} from "../../interfases/user.ts";
-import "react-datepicker/dist/react-datepicker.css";
 
 const RegisterForm: FC = () => {
-    const {register, handleSubmit, formState: {errors}, reset} = useForm<IFormValues>()
+    const {register, handleSubmit, formState: {errors}, reset} = useForm<IFormValues>({
+
+    })
     const {id} = useParams<{ id: string }>()
     const navigate = useNavigate()
     const save: SubmitHandler<IFormValues> = async (data) => {
@@ -20,7 +21,7 @@ const RegisterForm: FC = () => {
 
     return (
         <div className=" flex justify-center items-center h-[100vh] w-[100vw] ">
-            <div className="p-6 border rounded-2xl mt-[-250px]">
+            <div className="p-6 rounded-2xl mt-[-250px]">
                 <form onSubmit={handleSubmit(save)} className="">
                     <>
                         <input type="hidden" value={+id} {...register('event_id', {
@@ -32,24 +33,31 @@ const RegisterForm: FC = () => {
                         <label
                             className="p-2 font-bold w-[80px] block"
                         >Name:</label>
-                        <input {...register('name', {required: true})}
+                        <input {...register('name', {required: true,
+                            pattern: {value: /^[a-zA-Zа-яА-яёЁіІїЇ]{3,30}$/, message: 'Only letters min 1 max 20 ch'}
+                        })}
                                className="p-2 mr-6 rounded-md border border-gray-300"
                         />
-                        {errors.name ? (<div
-                            className="flex justify-center items-center text-red-500 uppercase font-bold h-[48px] w-[90px]">Required!</div>) : (
-                            <div className="h-[48px] w-[90px]"></div>)}
+
                     </div>
+                    {errors.name ? (<div
+                        className="flex justify-center items-center text-red-500 uppercase font-bold h-[10px]">{errors.name.message}</div>) : (
+                        <div className="h-[10px] "></div>)}
+
+
                     <div className="m-2 flex">
                         <label
                             className="p-2 font-bold w-[80px] block"
                         >Email:</label>
-                        <input type="email" {...register('email', {required: true})}
+                        <input type="email" {...register('email', {required: true
+                        ,pattern: {value: /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/, message: 'email is not valid'}
+                        })}
                                className="p-2 mr-6 rounded-md border border-gray-300"
                         />
-                        {errors.email ? (<div
-                            className="flex justify-center items-center text-red-500 uppercase font-bold h-[48px] w-[90px]">Required!</div>) : (
-                            <div className="h-[48px] w-[90px]"></div>)}
                     </div>
+                    {errors.email ? (<div
+                        className="flex justify-center items-center text-red-500 uppercase font-bold h-[10px]">{errors.email.message}</div>) : (
+                        <div className="h-[10px] w-[90px]"></div>)}
                     <div className="m-2 flex">
                         <label
                             className="p-2 font-bold w-[80px] block"
@@ -57,10 +65,11 @@ const RegisterForm: FC = () => {
                         <input type="date" {...register('date_birth', {required: true})}
                                className="p-2 mr-6 rounded-md border border-gray-300"
                         />
-                        {errors.date_birth ? (<div
-                            className="flex justify-center items-center text-red-500 uppercase font-bold h-[48px] w-[90px]">Required!</div>) : (
-                            <div className="h-[48px] w-[90px]"></div>)}
+
                     </div>
+                    {errors.date_birth ? (<div
+                        className="flex justify-center items-center text-red-500 uppercase font-bold h-[10px] ">Required!</div>) : (
+                        <div className="h-[10px] "></div>)}
                     <p className="p-2 font-bold text-center text-xl ">Where did yoy hear about this event?</p>
                     <div className="flex justify-center items-center">
                         <label className="p-2 font-bold flex items-center">
@@ -95,8 +104,8 @@ const RegisterForm: FC = () => {
                     </div>
 
                     {errors.where_hear ? (<div
-                        className="flex justify-center items-center text-red-500 uppercase font-bold h-[24px]">Required!</div>) : (
-                        <div className="h-[24px]"></div>)}
+                        className="flex justify-center items-center text-red-500 uppercase font-bold h-[10px]">Required!</div>) : (
+                        <div className="h-[10px]"></div>)}
                     <div className="flex justify-center items-center m-6">
                         <button type="submit"
                                 className=" whitespace-nowrap mr-6 p-2 relative inline-flex items-center justify-center rounded-md px-4 py-2 text-white bg-[#646cff] hover:text-white hover:bg-[#7a7fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#646cff] transition-all duration-300"

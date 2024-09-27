@@ -63,7 +63,7 @@ const Users: FC = () => {
     }
 
     return (
-        <div className="flex flex-col justify-between border w-[1440px] h-[100vh] ">
+        <div className="flex flex-col justify-between  w-[1440px] h-[100vh] ">
             <div className="bg-gray-900 p-4">
                 <div className="flex justify-center flex-row w-full  p-5 ">
                     <button
