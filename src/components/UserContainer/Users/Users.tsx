@@ -5,7 +5,7 @@ import {userService} from "../../../servises/userService";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {IFormValues, IUser} from "../../../interfases/user.ts";
 
-import css from "./Users.module.css"
+// import css from "./Users.module.css"
 
 
 const Users: FC = () => {
@@ -63,52 +63,71 @@ const Users: FC = () => {
     }
 
     return (
-        <>
-            <div></div>
-            <div className={css.progresscontainer}>
-                <div className={css.progressbar} style={{width: (byDay * 5) + '%'}}></div>
-            </div>
-
-            <p id="visitor-count">Users registred by day {byDay}</p>
-
-
-            <div>
-                <button onClick={() => navigate('/events')}>To Events</button>
-
-                <form onSubmit={handleSubmit(find)} className={css.form}>
-
-                    <div>
-                        <label> Search by Name: </label>
-                        <input {...register('name')} />
-                        <label> Search by Email: </label>
-                        <input  {...register('email')} />
-                        <button type="submit">Submit</button>
+        <div className="flex flex-col justify-between border w-[1440px] h-[100vh] ">
+            <div className="bg-gray-900 p-4">
+                <div className="flex justify-center flex-row w-full  p-5 ">
+                    <button
+                        className=" whitespace-nowrap mr-6 p-2 relative inline-flex items-center justify-center rounded-md px-4 py-2 text-white bg-[#646cff] hover:text-white hover:bg-[#7a7fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#646cff] transition-all duration-300"
+                        onClick={() => navigate('/events')}>To Events
+                    </button>
+                    <div className="w-full">
+                        <div className="w-full bg-gray-200 rounded-md">
+                            <div className="h-5 bg-green-500 rounded-md" style={{width: (byDay * 5) + '%'}}></div>
+                        </div>
+                        <p className="text-lg font-bold text-center">Users registered by day: {byDay}</p>
                     </div>
+                </div>
 
-                    <button onClick={resetData}>Reset</button>
 
+                <form onSubmit={handleSubmit(find)} className="flex justify-center flex-row w-full">
+                    <div>
+                        <label className="p-2 font-bold   "
+                        > Search by Name: </label>
+                        <input {...register('name')}
+                               className="p-2 mr-6 rounded-md border border-gray-300"
+                        />
+                        <label className="p-2 font-bold   "
+                        > Search by Email: </label>
+                        <input  {...register('email')}
+                                className="p-2 mr-6 rounded-md border border-gray-300"
+                        />
+                        <button type="submit"
+                                className=" whitespace-nowrap mr-6 p-2 relative inline-flex items-center justify-center rounded-md px-4 py-2 text-white bg-[#646cff] hover:text-white hover:bg-[#7a7fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#646cff] transition-all duration-300"
+                        >Find
+                        </button>
+                        <button onClick={resetData}
+                                className=" whitespace-nowrap mr-6 p-2 relative inline-flex items-center justify-center rounded-md px-4 py-2 text-white bg-[#646cff] hover:text-white hover:bg-[#7a7fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#646cff] transition-all duration-300"
+                        >Reset
+                        </button>
+                    </div>
                 </form>
-
-
             </div>
+
+
             {user.length === 0 ? (
-                <div>
+                <div className="flex justify-center items-center h-[100vh] text-3xl">
                     Nobody wants to visit this event
                 </div>
             ) : (
                 <>
-                    <div className={css.users_wrap}>
+                    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                         {user.map((item, index) => <User key={index} user={item}/>)}
                     </div>
 
-                    <div className={css.form}>
-                        <button disabled={!prevNext.prev} onClick={prev}>prev</button>
-                        <button disabled={prevNext.next > totalPage} onClick={next}>next</button>
+                    <div className=" flex justify-center items-center p-6">
+                        <button disabled={!prevNext.prev} onClick={prev}
+                                className="whitespace-nowrap mr-6 p-2 relative inline-flex items-center justify-center rounded-md px-4 py-2 text-white bg-[#646cff] hover:text-white hover:bg-[#7a7fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#646cff] transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
+                        >prev
+                        </button>
+                        <button disabled={prevNext.next > totalPage} onClick={next}
+                                className="whitespace-nowrap mr-6 p-2 relative inline-flex items-center justify-center rounded-md px-4 py-2 text-white bg-[#646cff] hover:text-white hover:bg-[#7a7fff] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#646cff] transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:hover:bg-gray-400"
+                        >next
+                        </button>
                     </div>
 
                 </>
             )}
-        </>
+        </div>
     );
 };
 

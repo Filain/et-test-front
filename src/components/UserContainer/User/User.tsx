@@ -1,6 +1,5 @@
 import {FC} from "react";
-import {IUser} from "../../../../../et-test-front/src/interfases/user";
-import css from './User.module.css'
+import {IUser} from "../../../interfases/user.ts";
 
 interface IProps {
     user: IUser
@@ -9,15 +8,14 @@ interface IProps {
 const User: FC<IProps> = ({user}) => {
     const{name,email, date_birth,where_hear,event_id}=user
     return (
-        <div className={css.user_wrap}>
-
-            <p>name: {name}</p>
-            <p>email: {email}</p>
-            <p>where_hear: {where_hear}</p>
-            <p>event_id: {event_id}</p>
-            <p>date_birth: {date_birth.toString()}</p>
+        <div className="bg-gray-900 border flex flex-col p-5 rounded-2xl">
+            <p>Name: <span className="font-bold"> {name}</span></p>
+            <p>Email: <span className="font-bold"> {email}</span></p>
+            <p>Where hear: <span className="font-bold"> {where_hear}</span></p>
+            <p>Event Id: <span className="font-bold"> {event_id}</span></p>
+            <p>Born in: <span className="font-bold"> {date_birth.toString()}</span></p>
         </div>
-    );
+);
 };
 
 export {User};
